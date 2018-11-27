@@ -27,6 +27,18 @@ using namespace std;
 			// n is the number of words in the file
 			// k equals max_word_count 
 WordBlender::WordBlender(string filename, int max_word_count) {
+	unordered_map<string, string>words;
+	//store words in words unordered_map
+	ifstream f(filename);
+	string line;
+	while (getline(f, line)) {
+		string firstTwo = string()+line[0] + line[1];
+		words[firstTwo] = line;
+	}
+	f.close();
+
+	//display words table
+	display_table(words);
 
 }
 
@@ -39,7 +51,27 @@ WordBlender::WordBlender(string filename, int max_word_count) {
 	// 
 	// Must run in O(1) time. 
 string WordBlender::blend(string first_word, string last_word, int word_count) {
+
 	return "";
 }
 
- 
+void  WordBlender::display_table(unordered_map<string, string> w) {
+	/*for (std::pair<std::string, string> element : w)
+	{
+		std::cout << element.first << " :: " << element.second << std::endl;
+	}*/
+
+	std::cout << "mymap contains:";
+	for (auto it = w.begin(); it != w.end(); ++it)
+		std::cout << " " << it->first << ":" << it->second<<endl;
+	std::cout << std::endl;
+
+	std::cout << "mymap's buckets contain:\n";
+	for (unsigned i = 0; i < w.bucket_count(); ++i) {
+		//std::cout << "bucket #" << i << " contains:";
+		for (auto local_it = w.begin(i); local_it != w.end(i); ++local_it)
+			std::cout << " " << local_it->first << ":" << local_it->second << endl;
+		//std::cout << std::endl;
+	}
+
+}

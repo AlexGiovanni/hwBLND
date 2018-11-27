@@ -41,6 +41,9 @@ class WordBlender
 		// Must run in O(1) time. 
 		string blend(string first_word, string last_word, int word_count);
 
+		//my functions
+		void display_table(unordered_map<string, string>);
+
 	private:
 		string** table;
 		int max_word_count;
