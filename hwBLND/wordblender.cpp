@@ -27,18 +27,21 @@ using namespace std;
 			// n is the number of words in the file
 			// k equals max_word_count 
 WordBlender::WordBlender(string filename, int max_word_count) {
-	unordered_map<string, string>words;
+	unordered_multimap<string, string>words;
 	//store words in words unordered_map
 	ifstream f(filename);
 	string line;
 	while (getline(f, line)) {
 		string firstTwo = string()+line[0] + line[1];
-		words[firstTwo] = line;
+		words.insert({firstTwo, line});
 	}
 	f.close();
-
+	
 	//display words table
 	display_table(words);
+	//display whats in key ot
+	display_same_key(words, "ot");
+	
 
 }
 
@@ -54,24 +57,20 @@ string WordBlender::blend(string first_word, string last_word, int word_count) {
 
 	return "";
 }
-
-void  WordBlender::display_table(unordered_map<string, string> w) {
-	/*for (std::pair<std::string, string> element : w)
+//display the words in hash table
+void  WordBlender::display_table(unordered_multimap<string, string> w) {
+	for (std::pair<std::string, string> element : w)
 	{
 		std::cout << element.first << " :: " << element.second << std::endl;
-	}*/
-
-	std::cout << "mymap contains:";
-	for (auto it = w.begin(); it != w.end(); ++it)
-		std::cout << " " << it->first << ":" << it->second<<endl;
-	std::cout << std::endl;
-
-	std::cout << "mymap's buckets contain:\n";
-	for (unsigned i = 0; i < w.bucket_count(); ++i) {
-		//std::cout << "bucket #" << i << " contains:";
-		for (auto local_it = w.begin(i); local_it != w.end(i); ++local_it)
-			std::cout << " " << local_it->first << ":" << local_it->second << endl;
-		//std::cout << std::endl;
 	}
+}
 
+//display words with same key in hash table
+void  WordBlender::display_same_key(unordered_multimap<string, string>words, string key) {
+	//display whats in key ot
+	cout << "display whats in key: "<<key << endl;
+	auto its = words.equal_range(key);
+	for (auto it = its.first; it != its.second; ++it) {
+		cout << it->first << '\t' << it->second << endl;
+	}
 }

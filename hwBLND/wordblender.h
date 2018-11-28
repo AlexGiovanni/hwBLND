@@ -42,7 +42,8 @@ class WordBlender
 		string blend(string first_word, string last_word, int word_count);
 
 		//my functions
-		void display_table(unordered_map<string, string>);
+		void display_table(unordered_multimap<string, string>);
+		void display_same_key(unordered_multimap<string, string>, string);
 
 	private:
 		string** table;
