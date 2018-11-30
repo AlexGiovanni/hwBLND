@@ -28,6 +28,7 @@ using namespace std;
 			// k equals max_word_count 
 WordBlender::WordBlender(string filename, int max_word_count) {
 	unordered_multimap<string, string>words;
+	unordered_map<string, int>index;//stores the indeses of aaaa aaab...
 	//store words in words unordered_map
 	ifstream f(filename);
 	string line;
@@ -37,13 +38,45 @@ WordBlender::WordBlender(string filename, int max_word_count) {
 	}
 	f.close();
 	
-	//display words table
-	display_table(words);
-	//display whats in key ot
-	display_same_key(words, "ot");
+	 
+	//create table max_word_count X 456976
+	table = new string*[max_word_count];
+	for (int i = 0; i < 10; i++) {
+		table[i] = new string[456976];
+	}
+	char al[] = { 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z' };
+	
+	cout << "alphabet 4 letters" << endl;
+	int column = 0;
+	for (int row = 0; row < max_word_count ; row++) {
+		for (int i = 0; i < 26; i++) {
+			for (int j = 0; j < 26; j++) {
+				for (int k = 0; k < 26; k++) {
+					for (int l = 0; l < 26; l++) {
+						if (row == 0) {
+							table[row][column] = start_end(words, string() + al[i] + al[j], string() + al[k] + al[l]);
+
+						}
+						index.insert({ string() + al[i] + al[j] + al[k] + al[l],column });
+						column++;
+					}
+				}
+			}
+		}
+	}
+
+	//find index for table 
+	auto it = index.find("tyol");
+	if (it == index.end())
+		cout << "not found" << endl;
+	else
+	cout << "ty ol in table: " << table[0][it->second] <<" index: "<<it->second<< endl;
+	
 	
 
-}
+}//end constructor
+
+
 
 	// Returns a blend word that:
 	// -Starts and ends with the given words
@@ -67,10 +100,41 @@ void  WordBlender::display_table(unordered_multimap<string, string> w) {
 
 //display words with same key in hash table
 void  WordBlender::display_same_key(unordered_multimap<string, string>words, string key) {
-	//display whats in key ot
+	//display whats in key 
 	cout << "display whats in key: "<<key << endl;
 	auto its = words.equal_range(key);
 	for (auto it = its.first; it != its.second; ++it) {
 		cout << it->first << '\t' << it->second << endl;
 	}
 }
+
+//find words that start and end with a given key
+string  WordBlender::start_end(unordered_multimap<string, string>words, string key, string end) {
+	 
+	auto its = words.equal_range(key);
+	for (auto it = its.first; it != its.second; ++it) {
+		int size = it->second.size();
+		string ltwo = string()+it->second[size-2] + it->second[size-1];
+		if (ltwo == end ) {
+			return it->second;
+		}
+	}
+	return "";
+}
+
+//char al[] = { 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z' };
+//int column = 0; int row = 0;
+//cout << "alphabet 4 letters" << endl;
+//for (int i = 0; i < 26; i++) {
+//	for (int j = 0; j < 26; j++) {
+//		for (int k = 0; k < 26; k++) {
+//			for (int l = 0; l < 26; l++) {
+//
+//				//string found = start_end(words, string()+al[i]+al[j], string() + al[k] + al[l]);
+//				//if (found != "") { cout <<"found: " <<found << endl; }
+//				column++;
+//			}
+//		}
+//	}
+//	row++;
+//}
