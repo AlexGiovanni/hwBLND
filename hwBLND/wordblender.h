@@ -46,6 +46,7 @@ class WordBlender
 		void display_same_key(unordered_multimap<string, string>, string);
 		string start_end(unordered_multimap<string, string>words, string key, string end);
 		int get_index(string);
+		vector<string> find_last_two(string, int);
 
 	private:
 		string** table;

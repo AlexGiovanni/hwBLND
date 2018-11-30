@@ -27,8 +27,9 @@ using namespace std;
 			// n is the number of words in the file
 			// k equals max_word_count 
 WordBlender::WordBlender(string filename, int max_word_count) {
-	unordered_multimap<string, string>words;
-	unordered_map<string, int>index;//stores the indeses of aaaa aaab...
+	unordered_multimap<string, string>words;//key is first two letters
+	unordered_multimap<string, string>wordsb;//key is last two letters
+	
 	//store words in words unordered_map
 	ifstream f(filename);
 	string line;
@@ -37,6 +38,15 @@ WordBlender::WordBlender(string filename, int max_word_count) {
 		words.insert({firstTwo, line});
 	}
 	f.close();
+
+	////store words in wordsb unordered_map last letters are the key
+	//ifstream f(filename);
+	//while (getline(f, line)) {
+	//	string lastTwo = string() + line[0] + line[1];
+	//	wordsb.insert({ lastTwo, line });
+	//}
+	//f.close();
+	
 	
 	 
 	//create table max_word_count X 456976
@@ -46,20 +56,27 @@ WordBlender::WordBlender(string filename, int max_word_count) {
 	}
 	char al[] = { 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z' };
 	
-	cout << "alphabet 4 letters" << endl;
+	string test = "";
+	cout << "test size: " << test.size() << endl;
+	//system("Pause");
+	//fill the table with words
 	int column = 0;
 	for (int row = 0; row < max_word_count ; row++) {
 		for (int i = 0; i < 26; i++) {
 			for (int j = 0; j < 26; j++) {
 				for (int k = 0; k < 26; k++) {
 					for (int l = 0; l < 26; l++) {
-						if (row == 0) {
+						//cout << column<<": "<<string() + al[i] + al[j] + al[k] + al[l]<<endl;
+						if (row == 0) {//find a word that starts and ends with the desired sequence
 							table[row][column] = start_end(words, string() + al[i] + al[j], string() + al[k] + al[l]);
 						}
 						if (row == 1) {//find two words that start and end with the string
-						
+							//for example apple lefty
+							//find word that starts with ap
+
+							//system("Pause");
 						}
-						index.insert({ string() + al[i] + al[j] + al[k] + al[l],column });
+						 
 						column++;
 					}
 				}
@@ -67,22 +84,14 @@ WordBlender::WordBlender(string filename, int max_word_count) {
 		}
 	}
 
-	////find index for table 
-	//auto it = index.find("tyol");
-	//if (it == index.end())
-	//	cout << "not found" << endl;
-	//else
-	//cout << "ty ol in table: " << table[0][it->second] <<" index: "<<it->second<< endl;
-	//
-	cout << "ap le in table: " << table[0][get_index("aple")] << endl;
-	cout << "er or in table: " << table[0][get_index("eror")] << endl;
-	cout << "ty ol in table: " << table[0][get_index("tyol")] << endl;
-	cout << "ve as in table: " << table[0][get_index("veas")] << endl;
-
 	
-	
-	
-	//cout << "get_index(): "<<get_index("tyol")<<endl;
+	/*cout << "ap le in table: " << table[0][get_index("aple")] << endl;
+	cout << "ap ty row two: " << table[1][get_index("apty")] << endl;
+*/
+	vector<string>last = find_last_two("as", 0);
+	for (int i = 0; i < last.size(); i++) {
+		cout << "in last: " << last[i]<<endl;
+	}
 
 }//end constructor
 
@@ -142,4 +151,18 @@ int  WordBlender::get_index(string key) {
 		(key[2] - 'a') *(26 ) +
 		(key[3] - 'a') ;
 	return index;
+}
+
+//takes a string containing last two letters
+//and an int representing the row to look for
+//and returns vector of strings containing words with last two letters
+vector<string>  WordBlender::find_last_two(string lastTwo, int row) {
+	vector<string>last;
+	int start = get_index(string() + "aa" + lastTwo);
+	while (start < 456976) {
+		if (table[row][start] != "") 
+			last.push_back(table[row][start]);
+       start += 676;
+	}
+	return last;
 }

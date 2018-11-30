@@ -26,3 +26,25 @@ find a word that ends with the sequence
 if they dont overlap find another word that ends with the sequence
 if there is no overlap find another first word and repete
 
+in row two column 1 i am looking for a word that starts with aa and a word that ends with aa
+i will create an unordered multimap that uses that last two letters as key(maybe not)
+
+create a function that will find the words that end with a pair
+loop trough the first row of the table 
+and find the appropriate word
+for example apple lefty
+find words that start with apaa-apzz there are 26a 26b 26c to 26z 26X26=676 10140 10815
+just loop  676 times from the index of apaa and that will be all words that start with ap
+its faster to loop trough the hashtable because words are guaranteed to exist
+
+how can i find words that end with a string
+ee is at index 3488
+its next occurence is at 4164
+and then at 4840 and then 5516
+it increments by 676
+if i create a loop that starts at the first occurence
+aa+lastTwo and increments by 676 it will go through all words that end with lastTwo
+some may be empty strings
+the size of an empty string is 0
+
+first occurence of le at 290
