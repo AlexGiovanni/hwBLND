@@ -55,7 +55,9 @@ WordBlender::WordBlender(string filename, int max_word_count) {
 					for (int l = 0; l < 26; l++) {
 						if (row == 0) {
 							table[row][column] = start_end(words, string() + al[i] + al[j], string() + al[k] + al[l]);
-
+						}
+						if (row == 1) {//find two words that start and end with the string
+						
 						}
 						index.insert({ string() + al[i] + al[j] + al[k] + al[l],column });
 						column++;
@@ -65,14 +67,22 @@ WordBlender::WordBlender(string filename, int max_word_count) {
 		}
 	}
 
-	//find index for table 
-	auto it = index.find("tyol");
-	if (it == index.end())
-		cout << "not found" << endl;
-	else
-	cout << "ty ol in table: " << table[0][it->second] <<" index: "<<it->second<< endl;
+	////find index for table 
+	//auto it = index.find("tyol");
+	//if (it == index.end())
+	//	cout << "not found" << endl;
+	//else
+	//cout << "ty ol in table: " << table[0][it->second] <<" index: "<<it->second<< endl;
+	//
+	cout << "ap le in table: " << table[0][get_index("aple")] << endl;
+	cout << "er or in table: " << table[0][get_index("eror")] << endl;
+	cout << "ty ol in table: " << table[0][get_index("tyol")] << endl;
+	cout << "ve as in table: " << table[0][get_index("veas")] << endl;
+
 	
 	
+	
+	//cout << "get_index(): "<<get_index("tyol")<<endl;
 
 }//end constructor
 
@@ -98,7 +108,7 @@ void  WordBlender::display_table(unordered_multimap<string, string> w) {
 	}
 }
 
-//display words with same key in hash table
+//display all words with same key in hash table
 void  WordBlender::display_same_key(unordered_multimap<string, string>words, string key) {
 	//display whats in key 
 	cout << "display whats in key: "<<key << endl;
@@ -121,20 +131,15 @@ string  WordBlender::start_end(unordered_multimap<string, string>words, string k
 	}
 	return "";
 }
-
-//char al[] = { 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z' };
-//int column = 0; int row = 0;
-//cout << "alphabet 4 letters" << endl;
-//for (int i = 0; i < 26; i++) {
-//	for (int j = 0; j < 26; j++) {
-//		for (int k = 0; k < 26; k++) {
-//			for (int l = 0; l < 26; l++) {
-//
-//				//string found = start_end(words, string()+al[i]+al[j], string() + al[k] + al[l]);
-//				//if (found != "") { cout <<"found: " <<found << endl; }
-//				column++;
-//			}
-//		}
-//	}
-//	row++;
-//}
+ 
+//returns the index of a given string or -1 if not found
+int  WordBlender::get_index(string key) {
+	int index = -1;
+	//get the index of the letter
+	index =
+		(key[0] - 'a') *(26 * 26 * 26) +
+		(key[1] - 'a') *(26 * 26 ) +
+		(key[2] - 'a') *(26 ) +
+		(key[3] - 'a') ;
+	return index;
+}

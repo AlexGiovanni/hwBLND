@@ -19,3 +19,10 @@ maybe i need an outer for loop that loops from 1 to max-word-count+1
 this will be the number of rows starting at 1
 for each row find a chain of size row
 l cannot be the column because l only loops 26 times before reseting
+
+for the second row i need two words that start and end with the string and overlap
+find a word that starts with the sequence 
+find a word that ends with the sequence
+if they dont overlap find another word that ends with the sequence
+if there is no overlap find another first word and repete
+

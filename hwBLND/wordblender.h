@@ -45,6 +45,7 @@ class WordBlender
 		void display_table(unordered_multimap<string, string>);
 		void display_same_key(unordered_multimap<string, string>, string);
 		string start_end(unordered_multimap<string, string>words, string key, string end);
+		int get_index(string);
 
 	private:
 		string** table;
