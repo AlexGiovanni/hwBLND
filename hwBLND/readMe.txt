@@ -105,7 +105,7 @@ i have to look two rows previous
 
 find a chain that starts with fir[st] and starts with [la]st
 
-test 3 i got to row 1 and row 2 and row 3 and row 4
+test 3 i got to row 1, 2, 3, 4, 5
 
 this takes to long maybe as i insert in table also insert in unordered multimap 
 to use with the next row. that would avoid looping 675 times to 
@@ -130,6 +130,25 @@ void insert_table(string ftwo, string ltwo int r, int c){
 				}
 
 			}
+		if (table[row][column] == "") {//if nothing was inserted 
+			vector<string>firstb = find_first_two(string() + al[i] + al[j], 0);//finds words
+			vector<string>lastb = find_last_two(string() + al[k] + al[l], 1);//finds chains
+				if (firstb.size() != 0 && lastb.size() != 0) {//if both words exist
+					for (int a = 0; a <= lastb.size() - 1; a++) {
+					for (int b = 0; b <= firstb.size() - 1; b++) {
+						if (overlap(firstb[b], lastb[a])) {
+							cout << "overlap: " << firstb[b] << " " << lastb[a] << endl;
+							table[row][column] = chain_words(firstb[b], lastb[a]);
+							cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
+						}
+					}
+				    }
+ 
+			    }
+		firstb.clear(); lastb.clear();
+		}
+		first.clear(); last.clear();
+
 
 }//end insettable
 
@@ -175,3 +194,5 @@ if (row == 2) {
 							first.clear(); last.clear();
 
 						}//end row 2
+
+column 4 and 3 are inserting same chain

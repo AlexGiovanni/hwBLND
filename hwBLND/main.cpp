@@ -69,7 +69,7 @@ int main()
         // Setup 
         unordered_set<string> D;
 		
-		/*
+		
         // Setup testing for W1
         populate_dictionary(D, "eleven-words.txt");
 		cout << "Test 1" << endl;
@@ -120,7 +120,7 @@ int main()
         test(is_blend(W2.blend("hoist", "abyss", 4), "hoist", "abyss", D) == 4);
         test(is_blend(W2.blend("gulch", "shark", 4), "gulch", "shark", D) == 4);
 		
-		*/
+		
         // Setup testing for W3
         populate_dictionary(D, "six-letter-words.txt");
 		cout << "Test 3" << endl;

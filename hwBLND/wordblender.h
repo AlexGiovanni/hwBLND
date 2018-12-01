@@ -52,6 +52,7 @@ class WordBlender
 		bool overlap(string, string);
 		string chain_words(string, string);
 		bool find_word_table( string);
+		void insert_table(string ftwo, string ltwo, int r, int c);
 
 	private:
 		string** table;
