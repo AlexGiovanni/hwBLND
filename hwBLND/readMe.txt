@@ -57,3 +57,40 @@ if there is no match move to the second first word
 for first to end
  for last to end
   check overlap
+
+for the third row i have to look at the second row
+if the column is rots then i am looking for a word in the second row
+that either starts with ro or ends with ts
+for every 2chain that starts with ro look for a word that ends in ts and overlaps
+if there is none look for 
+a chain that ends in ts and find a word that starts with ro and overlaps
+basicly what im trying to do is add a word to the beggining or end of a
+2 chain to form a 3 chain word
+
+i have a list of chains that start with ij
+and a list of words that end with kl
+for each chain
+	for each kl
+	 if overlap
+	 set; break;
+
+if nothing was inserted
+look for 2 chains tha end with kl
+an look for words that start with ro
+for each chain
+	for each ij
+	if overlap 
+	set; 
+
+create a function that loops trough a row in the table and returns all 
+2chains that start with the firstTwo
+aa** goes from 0 to 675 aazz
+bb** goes from 18252 to 18927 bbzz
+there is a diference of 675
+so starting at firstTwo +"aa"
+loop trough 675 to find 2 chain strings that start with firstTwo
+
+
+
+
+repeat for all rows

@@ -47,8 +47,10 @@ class WordBlender
 		string start_end(unordered_multimap<string, string>words, string key, string end);
 		int get_index(string);
 		vector<string> find_last_two(string, int);
+		vector<string> find_first_two(string, int);
 		bool overlap(string, string);
 		string chain_words(string, string);
+
 	private:
 		string** table;
 		int max_word_count;

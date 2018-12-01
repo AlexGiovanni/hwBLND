@@ -98,8 +98,41 @@ WordBlender::WordBlender(string filename, int max_word_count) {
 							 
 						}//end of row 1
 						if (row == 2) {
-						
-						}
+							vector<string>first = find_first_two(string() + al[i] + al[j], 1);
+							vector<string>last = find_last_two(string() + al[k] + al[l], 0);
+							if (first.size()!=0 && last.size() != 0 ) {//if both words exist
+								for (int a = 0; a <= first.size()-1 ; a++) {
+									for (int b = 0; b <= last.size() - 1; b++) {
+										if (overlap(first[a], last[b])) {
+											//cout << "overlap: " << first[a] << " " << last[b] << endl;
+											table[row][column] = chain_words(first[a], last[b]);
+											//cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
+										}
+
+									}
+
+								}
+
+							}
+							if (table[row][column] == "") {//if nothing was inserted 
+								vector<string>firstb = find_first_two(string() + al[i] + al[j], 0);//finds words
+								vector<string>lastb = find_last_two(string() + al[k] + al[l], 1);//finds chains
+								if (firstb.size() != 0 && lastb.size() != 0) {//if both words exist
+									for (int a = 0; a <= lastb.size() - 1; a++) {
+										for (int b = 0; b <= firstb.size() - 1; b++) {
+											if (overlap(firstb[a], lastb[b])) {
+												cout << "overlap: " << firstb[a] << " " << lastb[b] << endl;
+												table[row][column] = chain_words(firstb[a], lastb[b]);
+												cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
+											}
+										}
+									}
+
+								}
+							}
+
+
+						}//end row 2
 						 
 						column++;
 						if (column >= 456976)column = 0;
@@ -150,7 +183,8 @@ void  WordBlender::display_same_key(unordered_multimap<string, string>words, str
 	}
 }
 
-//find words that start and end with a given key
+//find words that start and end with a given key 
+//in the unordered_multimap
 string  WordBlender::start_end(unordered_multimap<string, string>words, string key, string end) {
 	 
 	auto its = words.equal_range(key);
@@ -188,6 +222,23 @@ vector<string>  WordBlender::find_last_two(string lastTwo, int row) {
        start += 676;
 	}
 	return last;
+}
+
+//returns chains that start with firstTwo letters
+//takes a string containing first two letters
+//and an int representing the row to look for
+//and returns vector of strings containing words with first two letters
+vector<string>  WordBlender::find_first_two(string ft, int row) {
+	vector<string>first;
+	int start = get_index(string() + ft + "aa");
+	int end = start + 675;
+	while ( start<end) {
+		if (table[row][start] != "")
+			first.push_back(table[row][start]);
+		start++;
+	}
+
+	return first;
 }
 
 //check if two words overlap
