@@ -28,7 +28,7 @@ using namespace std;
 			// k equals max_word_count 
 WordBlender::WordBlender(string filename, int max_word_count) {
 	unordered_multimap<string, string>words;//key is first two letters
-	unordered_multimap<string, string>wordsb;//key is last two letters
+	//unordered_multimap<string, string>wordsb;//key is last two letters
 	
 	//store words in words unordered_map
 	ifstream f(filename);
@@ -56,6 +56,8 @@ WordBlender::WordBlender(string filename, int max_word_count) {
 	}
 	char al[] = { 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z' };
 	
+	//display_same_key(words , "ot");
+
 	string test = "";
 	cout << "test size: " << test.size() << endl;
 	//system("Pause");
@@ -71,27 +73,48 @@ WordBlender::WordBlender(string filename, int max_word_count) {
 							table[row][column] = start_end(words, string() + al[i] + al[j], string() + al[k] + al[l]);
 						}
 						if (row == 1) {//find two words that start and end with the string
-							//for example apple lefty
-							//find word that starts with ap
+							//find word that starts with sequence
+							auto its = words.equal_range(string()+al[i]+al[j]);
+							vector<string>last = find_last_two(string() + al[k] + al[l], 0);
+							if (last.size()!=0 && its.first!=its.second ) {//if both words exist
+								//cout << "if both words exist" << endl;
+								for (auto it = its.first; it != its.second; ++it) {
+									//cout << "first " << it->first << endl;
+									for (int c = 0; c <= last.size() - 1; c++) {
+										//cout <<"checking overlap "<< it->second <<" "<< last[c]<<endl;
+										if (overlap(it->second, last[c])) {
+											//cout << "---------overlap: " << it->second << ", " << last[c] << endl;
+											table[row][column] = chain_words(it->second, last[c]); 
+											//cout << "inserted in " << row << ", " << column << ": "<<table[row][column] << endl;
+											break;
+										}
+									}
 
-							//system("Pause");
+								}
+
+							 
+							}
+
+							 
+						}//end of row 1
+						if (row == 2) {
+						
 						}
 						 
 						column++;
+						if (column >= 456976)column = 0;
 					}
 				}
 			}
 		}
 	}
 
-	
-	/*cout << "ap le in table: " << table[0][get_index("aple")] << endl;
-	cout << "ap ty row two: " << table[1][get_index("apty")] << endl;
-*/
-	vector<string>last = find_last_two("as", 0);
-	for (int i = 0; i < last.size(); i++) {
-		cout << "in last: " << last[i]<<endl;
-	}
+	/*
+	cout << "ap le in table: " << table[0][get_index("aple")] << endl;
+	cout << "ot or row two: " << table[1][get_index("otor")] << endl;
+	cout << "ve ot is at index " << get_index("veot") << endl;
+
+	 */
 
 }//end constructor
 
@@ -165,4 +188,23 @@ vector<string>  WordBlender::find_last_two(string lastTwo, int row) {
        start += 676;
 	}
 	return last;
+}
+
+//check if two words overlap
+bool WordBlender::overlap(string w1, string w2) {
+	
+		string ltwo = string() + w1[w1.size()-2] + w1[w1.size() - 1];
+		string ftwo = string() + w2[0] + w2[1];
+		//cout << "comparing " << ltwo << " " << ftwo << endl;
+		if ( ltwo == ftwo) {
+			return true;
+		}
+		return false;
+}
+
+//takes two words and returns
+//the chain of those words
+string WordBlender::chain_words(string a, string b) {
+	a.pop_back(); a.pop_back();
+	return string()+a+b;
 }

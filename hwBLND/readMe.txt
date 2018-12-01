@@ -9,25 +9,24 @@ aa[a-z][a-z]
 
 in the loop 
 if there is a word that starts with the first two letters and ends with the last two letters
-add that word in the table
+add that word in the table first row
 
 for the second row i must find two words that end and start with then appropriate letters
-in the nested for loop i is the row j is the column
 there is a at most 15 rows
 
 maybe i need an outer for loop that loops from 1 to max-word-count+1
 this will be the number of rows starting at 1
-for each row find a chain of size row
-l cannot be the column because l only loops 26 times before reseting
+for each row find a chain of size row +1
 
 for the second row i need two words that start and end with the string and overlap
 find a word that starts with the sequence 
 find a word that ends with the sequence
+if there is words with these properties check if they overlap
+
 if they dont overlap find another word that ends with the sequence
-if there is no overlap find another first word and repete
+if there is no overlap find another first word and repeat
 
 in row two column 1 i am looking for a word that starts with aa and a word that ends with aa
-i will create an unordered multimap that uses that last two letters as key(maybe not)
 
 create a function that will find the words that end with a pair
 loop trough the first row of the table 
@@ -48,3 +47,13 @@ some may be empty strings
 the size of an empty string is 0
 
 first occurence of le at 290
+
+to find words that overlap 
+i find the first word
+and last word
+for each first word i need to loop trough all the last words vector
+if there is no match move to the second first word
+
+for first to end
+ for last to end
+  check overlap
