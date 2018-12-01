@@ -44,12 +44,14 @@ class WordBlender
 		//my functions
 		void display_table(unordered_multimap<string, string>);
 		void display_same_key(unordered_multimap<string, string>, string);
+		bool find_word(unordered_multimap<string, string>, string, string);
 		string start_end(unordered_multimap<string, string>words, string key, string end);
 		int get_index(string);
 		vector<string> find_last_two(string, int);
 		vector<string> find_first_two(string, int);
 		bool overlap(string, string);
 		string chain_words(string, string);
+		bool find_word_table( string);
 
 	private:
 		string** table;

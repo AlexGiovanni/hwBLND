@@ -67,17 +67,19 @@ a chain that ends in ts and find a word that starts with ro and overlaps
 basicly what im trying to do is add a word to the beggining or end of a
 2 chain to form a 3 chain word
 
+(insert at the end)
 i have a list of chains that start with ij
 and a list of words that end with kl
-for each chain
+for each chain that starts with 
 	for each kl
 	 if overlap
 	 set; break;
 
+(insert at the begining)
 if nothing was inserted
 look for 2 chains tha end with kl
 an look for words that start with ro
-for each chain
+for each chain that ends with
 	for each ij
 	if overlap 
 	set; 
@@ -90,15 +92,86 @@ there is a diference of 675
 so starting at firstTwo +"aa"
 loop trough 675 to find 2 chain strings that start with firstTwo
 
-
-
-
 repeat for all rows
 but change it so that it looks for that chain in the previous row
 
 for the second row the chain is in row 1
 for the third row the chain is in row 2
 
+if i am loking for a 3 chain 
+then i find a 1 chain 
+and add the to words to the beginning and end
+i have to look two rows previous
+
+find a chain that starts with fir[st] and starts with [la]st
+
+test 3 i got to row 1 and row 2 and row 3 and row 4
+
 this takes to long maybe as i insert in table also insert in unordered multimap 
 to use with the next row. that would avoid looping 675 times to 
 find chains in previous rows. then overwite the map
+unordered_multimap<string, string >prev
+
+//checks and inserts chains in table
+void insert_table(string ftwo, string ltwo int r, int c){
+		vector<string>first = find_first_two(ftwo, r-2);//chain
+		vector<string>last = find_last_two(ltwo, 0);//word
+			if (first.size()!=0 && last.size() != 0 ) {//if both words exist
+				for (int a = 0; a <= first.size()-1 ; a++) {
+					for (int b = 0; b <= last.size() - 1; b++) {
+						if (overlap(first[a], last[b])) {
+							//cout << "overlap: " << first[a] << " " << last[b] << endl;
+							table[row][column] = chain_words(first[a], last[b]);
+							//cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
+						}
+
+					}
+
+				}
+
+			}
+
+}//end insettable
+
+
+
+
+
+
+if (row == 2) {
+							vector<string>first = find_first_two(string() + al[i] + al[j], 1);//chain
+							vector<string>last = find_last_two(string() + al[k] + al[l], 0);//word
+							if (first.size()!=0 && last.size() != 0 ) {//if both words exist
+								for (int a = 0; a <= first.size()-1 ; a++) {
+									for (int b = 0; b <= last.size() - 1; b++) {
+										if (overlap(first[a], last[b])) {
+											//cout << "overlap: " << first[a] << " " << last[b] << endl;
+											table[row][column] = chain_words(first[a], last[b]);
+											//cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
+										}
+
+									}
+
+								}
+
+							}
+							if (table[row][column] == "") {//if nothing was inserted 
+								vector<string>firstb = find_first_two(string() + al[i] + al[j], 0);//finds words
+								vector<string>lastb = find_last_two(string() + al[k] + al[l], 1);//finds chains
+								if (firstb.size() != 0 && lastb.size() != 0) {//if both words exist
+									for (int a = 0; a <= lastb.size() - 1; a++) {
+										for (int b = 0; b <= firstb.size() - 1; b++) {
+											if (overlap(firstb[b], lastb[a])) {
+												cout << "overlap: " << firstb[b] << " " << lastb[a] << endl;
+												table[row][column] = chain_words(firstb[b], lastb[a]);
+												cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
+											}
+										}
+									}
+
+								}
+								firstb.clear(); lastb.clear();
+							}
+							first.clear(); last.clear();
+
+						}//end row 2
