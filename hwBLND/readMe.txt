@@ -94,3 +94,11 @@ loop trough 675 to find 2 chain strings that start with firstTwo
 
 
 repeat for all rows
+but change it so that it looks for that chain in the previous row
+
+for the second row the chain is in row 1
+for the third row the chain is in row 2
+
+this takes to long maybe as i insert in table also insert in unordered multimap 
+to use with the next row. that would avoid looping 675 times to 
+find chains in previous rows. then overwite the map
