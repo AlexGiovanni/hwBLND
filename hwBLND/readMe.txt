@@ -107,11 +107,6 @@ find a chain that starts with fir[st] and starts with [la]st
 
 test 3 i got to row 1, 2, 3, 4, 5
 
-this takes to long maybe as i insert in table also insert in unordered multimap 
-to use with the next row. that would avoid looping 675 times to 
-find chains in previous rows. then overwite the map
-unordered_multimap<string, string >prev
-
 //checks and inserts chains in table
 void insert_table(string ftwo, string ltwo int r, int c){
 		vector<string>first = find_first_two(ftwo, r-2);//chain
@@ -130,24 +125,7 @@ void insert_table(string ftwo, string ltwo int r, int c){
 				}
 
 			}
-		if (table[row][column] == "") {//if nothing was inserted 
-			vector<string>firstb = find_first_two(string() + al[i] + al[j], 0);//finds words
-			vector<string>lastb = find_last_two(string() + al[k] + al[l], 1);//finds chains
-				if (firstb.size() != 0 && lastb.size() != 0) {//if both words exist
-					for (int a = 0; a <= lastb.size() - 1; a++) {
-					for (int b = 0; b <= firstb.size() - 1; b++) {
-						if (overlap(firstb[b], lastb[a])) {
-							cout << "overlap: " << firstb[b] << " " << lastb[a] << endl;
-							table[row][column] = chain_words(firstb[b], lastb[a]);
-							cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
-						}
-					}
-				    }
- 
-			    }
-		firstb.clear(); lastb.clear();
-		}
-		first.clear(); last.clear();
+		 
 
 
 }//end insettable
@@ -156,43 +134,101 @@ void insert_table(string ftwo, string ltwo int r, int c){
 
 
 
-
-if (row == 2) {
-							vector<string>first = find_first_two(string() + al[i] + al[j], 1);//chain
-							vector<string>last = find_last_two(string() + al[k] + al[l], 0);//word
-							if (first.size()!=0 && last.size() != 0 ) {//if both words exist
-								for (int a = 0; a <= first.size()-1 ; a++) {
-									for (int b = 0; b <= last.size() - 1; b++) {
-										if (overlap(first[a], last[b])) {
-											//cout << "overlap: " << first[a] << " " << last[b] << endl;
-											table[row][column] = chain_words(first[a], last[b]);
-											//cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
-										}
-
-									}
-
-								}
-
-							}
-							if (table[row][column] == "") {//if nothing was inserted 
-								vector<string>firstb = find_first_two(string() + al[i] + al[j], 0);//finds words
-								vector<string>lastb = find_last_two(string() + al[k] + al[l], 1);//finds chains
-								if (firstb.size() != 0 && lastb.size() != 0) {//if both words exist
-									for (int a = 0; a <= lastb.size() - 1; a++) {
-										for (int b = 0; b <= firstb.size() - 1; b++) {
-											if (overlap(firstb[b], lastb[a])) {
-												cout << "overlap: " << firstb[b] << " " << lastb[a] << endl;
-												table[row][column] = chain_words(firstb[b], lastb[a]);
-												cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
-											}
-										}
-									}
-
-								}
-								firstb.clear(); lastb.clear();
-							}
-							first.clear(); last.clear();
-
-						}//end row 2
+ 
 
 column 4 and 3 are inserting same chain
+i think the problem is tha if the table is of size less than 10
+
+
+this takes to long maybe as i insert in table also insert in unordered multimap 
+to use with the next row. that would avoid looping 675 times to 
+find chains in previous rows. then overwite the map
+unordered_multimap<string, string >prevf first
+unordered_multimap<string, string >prevl last
+whenever a word gets inserted (starting in row 1)
+add it to prevf with key ij
+add it to prevl with key kl
+this way i can find words that start with and end with a key faster
+
+(insert at the end)
+i have a list of chains that start with ij(prevf)
+and a list of words that end with kl(wordsb)
+for each chain that starts with 
+	for each kl
+	 if overlap
+	 set; 
+
+
+if(prevf(key) && wordsb(key) are not empty)
+  for each prevf(key)
+    for each wordsb(key)
+      if overlap 
+      	set
+
+how to check if its the first time in that row
+
+forget the multimap 
+maybe instead of looping 675 to find the words to plug in the chain
+i am looking for words that end in kl and checking if they overlap
+another way to do that is
+to find words that start with the last letters of chain 
+and check if they end with kl
+
+1) find chains that start with ij
+2) store in a string the last letters of each chain 
+	use start end loops troug multimap
+	returns string with start endl letters
+3) find words that start with that string and end with kl
+
+1) find chains that start with ij
+2) find words that end with kl
+3) check if they overlap
+
+i can speed up find last two function by looping trough 
+the multimap instead of table
+because it is only used in row == 1
+
+is there any way to get the chains without looping trough the table
+
+maybe a better way is to start at the end 
+for all words that end with kl
+  find a chain that starts  with ij and ends with firstlettersofword
+
+1) loop trough wordsb
+2) string ends = it->second[0]+[1]
+3) 
+
+ this approach requires me to find words in dictionary by last letters
+ it actualy builds it prety fast
+ why dosnt row 3 find anything
+
+ if row == 1 i am looking for
+ a word that startst with firsttwo
+ a word that ends with lasttwo
+ and that they overlap
+  for all ij
+    for all kl
+    if overalp
+    set
+
+row 0:
+loop trough the words 
+for each word get its index plug it in table
+
+row 1: 
+for each word
+  for each word that overlaps
+  get index
+  plug in table
+  plug in chain list
+
+row >= 2 && < max_word_count
+for each chain 
+  for each word that overlaps 
+  get index
+  plug in table 
+  plug in chain list
+
+when row increments clear the map
+i got to line 80
+ if (row >= 2 && row < max_word_count&&row<10)

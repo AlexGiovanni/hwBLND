@@ -1,4 +1,4 @@
-//Alexis Santiago
+//Alexis Santiago December 2 2018
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
@@ -11,115 +11,204 @@
 
 using namespace std;
 
- 
-	// Constructs a Wordblender that creates blend words 
-	// from those provided in the file. The file is promised
-	// to have the following format:
-	// 
-	// word1
-	// word2
-	// ...
-	// wordN
-	//
-	// where word1 < word2 < ... < wordN
-	//
-	// Must run in O(nk) time, where:
-			// n is the number of words in the file
-			// k equals max_word_count 
+
+// Constructs a Wordblender that creates blend words 
+// from those provided in the file. The file is promised
+// to have the following format:
+// 
+// word1
+// word2
+// ...
+// wordN
+//
+// where word1 < word2 < ... < wordN
+//
+// Must run in O(nk) time, where:
+		// n is the number of words in the file
+		// k equals max_word_count 
 WordBlender::WordBlender(string filename, int max_word_count) {
 	unordered_multimap<string, string>words;//key is first two letters
-	//unordered_multimap<string, string>wordsb;//key is last two letters
-	
+	unordered_multimap<string, string>chains;
+	unordered_multimap<string, string>chains2;
+	unordered_multimap<string, string>chains3;
+	unordered_multimap<string, string>chains4;
+	unordered_multimap<string, string>chains5;
+	unordered_multimap<string, string>chains6;
+	unordered_multimap<string, string>chains7;
+	unordered_multimap<string, string>chains8;
+
 	//store words in words unordered_map
 	ifstream f(filename);
 	string line;
 	while (getline(f, line)) {
-		string firstTwo = string()+line[0] + line[1];
+		string firstTwo = string() + line[0] + line[1];
 		words.insert({firstTwo, line});
 	}
 	f.close();
-
-	////store words in wordsb unordered_map last letters are the key
-	//ifstream f(filename);
-	//while (getline(f, line)) {
-	//	string lastTwo = string() + line[0] + line[1];
-	//	wordsb.insert({ lastTwo, line });
-	//}
-	//f.close();
-	
-	
-	 
+ 
 	//create table max_word_count X 456976
 	table = new string*[max_word_count];
 	for (int i = 0; i < 10; i++) {
 		table[i] = new string[456976];
 	}
-	char al[] = { 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z' };
-	
-	//display_same_key(words , "ot");
-
-	string test = "";
-	//cout << "test size: " << test.size() << endl;
-	//system("Pause");
+ 
 	//fill the table with words
-	int column = 0;
-	for (int row = 0; row < max_word_count ; row++) {
-		for (int i = 0; i < 26; i++) {
-			for (int j = 0; j < 26; j++) {
-				for (int k = 0; k < 26; k++) {
-					for (int l = 0; l < 26; l++) {
-						//cout << column<<": "<<string() + al[i] + al[j] + al[k] + al[l]<<endl;
-						if (row == 0) {//find a word that starts and ends with the desired sequence
-							//cout << "row " << row << endl;
-							table[row][column] = start_end(words, string() + al[i] + al[j], string() + al[k] + al[l]);
-						}
-						if (row == 1) {//find two words that start and end with the string
-							//cout << "row " << row << endl;
-							//find word that starts with sequence
-							auto its = words.equal_range(string()+al[i]+al[j]);
-							vector<string>last = find_last_two(string() + al[k] + al[l], 0);
-							if (last.size()!=0 && its.first!=its.second ) {//if both words exist
-								//cout << "if both words exist" << endl;
-								for (auto it = its.first; it != its.second; ++it) {
-									//cout << "first " << it->first << endl;
-									for (int c = 0; c <= last.size() - 1; c++) {
-										//cout <<"checking overlap "<< it->second <<" "<< last[c]<<endl;
-										if (overlap(it->second, last[c])) {
-											//cout << "---------overlap: " << it->second << ", " << last[c] << endl;
-											table[row][column] = chain_words(it->second, last[c]); 
-											//cout << "inserted in " << row << ", " << column << ": "<<table[row][column] << endl;
-											break;
-										}
-									}
+	for (int row = 0; row < max_word_count; row++) {
+		 
+		 if (row == 0) {//find a word that starts and ends with the desired sequence 
+			 //loop trough all words
+			 for (pair<string, string> el : words){
+				 string key = string() + el.second[0] + el.second[1] +
+					 el.second[el.second.size() - 2] + el.second[el.second.size()-1];
+				 table[row][get_index(key)] = el.second;
+				 
+			 }
+			 
+		 }
+		 if (row == 1) {//find two words that start and end with the string
+			 for (pair<string, string> el : words) {
+				 string lt = string() + el.second[el.second.size() - 2] +
+					 el.second[el.second.size() - 1];
+				 auto its = words.equal_range(lt);
+				 for (auto it = its.first; it != its.second; ++it) {
+					 string key = string() + el.second[0] + el.second[1] +
+						 it->second[it->second.size() - 2] + it->second[it->second.size() - 1];
+					 table[row][get_index(key)] = chain_words(el.second, it->second);
+					 chains.insert({ string()+el.second[0]+el.second[1]
+						 ,table[row][get_index(key)] });
+					 
+				 }
+			 
+			 }
 
-								}
 
+		 }//end of row 1
+		 if (row == 2 && row < max_word_count ) {
+			 for (pair<string, string> el : chains) {
+				 string lt = string() + el.second[el.second.size() - 2] +
+					 el.second[el.second.size() - 1];
+				 auto its = words.equal_range(lt);
+				 for (auto it = its.first; it != its.second; ++it) {
+					 string key = string() + el.second[0] + el.second[1] +
+						 it->second[it->second.size() - 2] + it->second[it->second.size() - 1];
+					 table[row][get_index(key)] = chain_words(el.second, it->second);
+					 chains2.insert({ string() + el.second[0] + el.second[1]
+						 ,table[row][get_index(key)] });
+					 
+				 }
+			 }
 							 
-							}
-
-							 
-						}//end of row 1
-						if (row >= 2 && row<10) {
-							insert_table(string()+al[i]+al[j], string() + al[k] + al[l], row, column);
-						}//end row
-						 
-						 
-						 
-						column++;
-						if (column >= 456976)column = 0;
-					}
-				}
-			}
-		}
+		 }//end row 2
+		 if (row == 3 && row < max_word_count) {
+			 for (pair<string, string> el : chains2) {
+				 string lt = string() + el.second[el.second.size() - 2] +
+					 el.second[el.second.size() - 1];
+				 auto its = words.equal_range(lt);
+				 for (auto it = its.first; it != its.second; ++it) {
+					 string key = string() + el.second[0] + el.second[1] +
+						 it->second[it->second.size() - 2] + it->second[it->second.size() - 1];
+					 table[row][get_index(key)] = chain_words(el.second, it->second);
+					 chains3.insert({ string() + el.second[0] + el.second[1]
+						 ,table[row][get_index(key)] });
+					 
+				 }
+			 }
+		 }//end row 3
+		 if (row == 4 && row < max_word_count) {
+			 for (pair<string, string> el : chains3) {
+				 string lt = string() + el.second[el.second.size() - 2] +
+					 el.second[el.second.size() - 1];
+				 auto its = words.equal_range(lt);
+				 for (auto it = its.first; it != its.second; ++it) {
+					 string key = string() + el.second[0] + el.second[1] +
+						 it->second[it->second.size() - 2] + it->second[it->second.size() - 1];
+					 table[row][get_index(key)] = chain_words(el.second, it->second);
+					 chains4.insert({ string() + el.second[0] + el.second[1]
+						 ,table[row][get_index(key)] });
+					 
+				 }
+			 }
+		 }//end row 4
+		 if (row == 5 && row < max_word_count) {
+			 for (pair<string, string> el : chains4) {
+				 string lt = string() + el.second[el.second.size() - 2] +
+					 el.second[el.second.size() - 1];
+				 auto its = words.equal_range(lt);
+				 for (auto it = its.first; it != its.second; ++it) {
+					 string key = string() + el.second[0] + el.second[1] +
+						 it->second[it->second.size() - 2] + it->second[it->second.size() - 1];
+					 table[row][get_index(key)] = chain_words(el.second, it->second);
+					 chains5.insert({ string() + el.second[0] + el.second[1]
+						 ,table[row][get_index(key)] });
+					 
+				 }
+			 }
+		 }//end row 5
+		 if (row == 6 && row < max_word_count) {
+			 for (pair<string, string> el : chains5) {
+				 string lt = string() + el.second[el.second.size() - 2] +
+					 el.second[el.second.size() - 1];
+				 auto its = words.equal_range(lt);
+				 for (auto it = its.first; it != its.second; ++it) {
+					 string key = string() + el.second[0] + el.second[1] +
+						 it->second[it->second.size() - 2] + it->second[it->second.size() - 1];
+					 table[row][get_index(key)] = chain_words(el.second, it->second);
+					 chains6.insert({ string() + el.second[0] + el.second[1]
+						 ,table[row][get_index(key)] });
+					 
+				 }
+			 }
+		 }//end row 6
+		 if (row == 7 && row < max_word_count) {
+			 for (pair<string, string> el : chains6) {
+				 string lt = string() + el.second[el.second.size() - 2] +
+					 el.second[el.second.size() - 1];
+				 auto its = words.equal_range(lt);
+				 for (auto it = its.first; it != its.second; ++it) {
+					 string key = string() + el.second[0] + el.second[1] +
+						 it->second[it->second.size() - 2] + it->second[it->second.size() - 1];
+					 table[row][get_index(key)] = chain_words(el.second, it->second);
+					 chains7.insert({ string() + el.second[0] + el.second[1]
+						 ,table[row][get_index(key)] });
+				 
+				 }
+			 }
+		 }//end row 7
+		 if (row == 8 && row < max_word_count) {
+			 for (pair<string, string> el : chains7) {
+				 string lt = string() + el.second[el.second.size() - 2] +
+					 el.second[el.second.size() - 1];
+				 auto its = words.equal_range(lt);
+				 for (auto it = its.first; it != its.second; ++it) {
+					 string key = string() + el.second[0] + el.second[1] +
+						 it->second[it->second.size() - 2] + it->second[it->second.size() - 1];
+					 table[row][get_index(key)] = chain_words(el.second, it->second);
+					 chains8.insert({ string() + el.second[0] + el.second[1]
+						 ,table[row][get_index(key)] });
+					 
+				 }
+			 }
+		 }//end row 8
+		 if (row == 9 && row < max_word_count) {
+			 for (pair<string, string> el : chains8) {
+				 string lt = string() + el.second[el.second.size() - 2] +
+					 el.second[el.second.size() - 1];
+				 auto its = words.equal_range(lt);
+				 for (auto it = its.first; it != its.second; ++it) {
+					 string key = string() + el.second[0] + el.second[1] +
+						 it->second[it->second.size() - 2] + it->second[it->second.size() - 1];
+					 table[row][get_index(key)] = chain_words(el.second, it->second);
+					 
+				 }
+			 }
+		 }//end row 9
+ 		 
+		 
 	}
 
-	/*
-	cout << "ap le in table: " << table[0][get_index("aple")] << endl;
-	cout << "ot or row two: " << table[1][get_index("otor")] << endl;
-	cout << "ve ot is at index " << get_index("veot") << endl;
-
-	 */
-
+	 
+	words.clear(); chains.clear(); chains2.clear();chains3.clear(); chains4.clear();
+	chains5.clear(); chains6.clear(); chains7.clear(); chains8.clear();
 }//end constructor
 
 
@@ -133,480 +222,65 @@ WordBlender::WordBlender(string filename, int max_word_count) {
 	// 
 	// Must run in O(1) time. 
 string WordBlender::blend(string first, string last, int word_count) {
-	cout << "testing " << first << " " << last << endl;
+	//cout << "testing " << first << " " << last << endl;
 	string chain = "";
 	if (word_count == 2) {
-		
-			if (overlap(first, last)) {
-				chain = chain_words(first, last);
-			}
-		
+
+		if (overlap(first, last)) {
+			chain = chain_words(first, last);
+		}
+
 	}
 	if (word_count > 2) {//3 or greater
-		 
-			string ft = string() + first[first.size() - 2] + first[first.size() - 1];
-			string la = string() + last[0] + last[1];
-			string c = table[word_count - 3][get_index(string() + ft + la)];
-			//cout <<"found chain word: "<< c << endl
-			if (c!="")
+
+		string ft = string() + first[first.size() - 2] + first[first.size() - 1];
+		string la = string() + last[0] + last[1];
+		string c = table[word_count - 3][get_index(string() + ft + la)];
+		//cout <<"found chain word: "<< c << endl
+		if (c != "")
 			chain = chain_words(chain_words(first, c), last);
-		 
+
 	}
-	cout << "chain: " << chain << endl;
+	//cout << "chain: " << chain << endl;
+	 
 	return chain;
 }
-//display the words in hash table
-void  WordBlender::display_table(unordered_multimap<string, string> w) {
-	for (std::pair<std::string, string> element : w)
-	{
-		std::cout << element.first << " :: " << element.second << std::endl;
-	}
-}
 
-//display all words with same key in hash table
-void  WordBlender::display_same_key(unordered_multimap<string, string>words, string key) {
-	//display whats in key 
-	cout << "display whats in key: "<<key << endl;
-	auto its = words.equal_range(key);
-	for (auto it = its.first; it != its.second; ++it) {
-		cout << it->first << '\t' << it->second << endl;
-	}
-}
 
-//checks if a word is in the dictionary of words
-bool WordBlender::find_word(unordered_multimap<string, string>words, string key, string word) {
-	auto its = words.equal_range(key);
-	for (auto it = its.first; it != its.second; ++it) {
-		cout << it->first << '\t' << it->second << endl;
-		if (it->second==word)
-			return true;
-	}
-	return false;
-}
-
-//checks if a word is in the first row in the table
-bool WordBlender::find_word_table( string word) {
-	string key = string() + word[0] + word[1];
-	int start = get_index(string() + key + "aa");
-	int end = start + 675;
-	while (start < end) {
-		if (table[0][start] == word)
-			return true;
-		start++;
-	}
-	return false;
-}
-
-//find words that start and end with a given key 
-//in the unordered_multimap
-string  WordBlender::start_end(unordered_multimap<string, string>words, string key, string end) {
-	 
-	auto its = words.equal_range(key);
-	for (auto it = its.first; it != its.second; ++it) {
-		int size = it->second.size();
-		string ltwo = string()+it->second[size-2] + it->second[size-1];
-		if (ltwo == end ) {
-			return it->second;
-		}
-	}
-	return "";
-}
- 
 //returns the index of a given string or -1 if not found
 int  WordBlender::get_index(string key) {
 	int index = -1;
 	//get the index of the letter
 	index =
 		(key[0] - 'a') *(26 * 26 * 26) +
-		(key[1] - 'a') *(26 * 26 ) +
-		(key[2] - 'a') *(26 ) +
-		(key[3] - 'a') ;
+		(key[1] - 'a') *(26 * 26) +
+		(key[2] - 'a') *(26) +
+		(key[3] - 'a');
 	return index;
 }
 
-//takes a string containing last two letters
-//and an int representing the row to look for
-//and returns vector of strings containing words with last two letters
-vector<string>  WordBlender::find_last_two(string lastTwo, int row) {
-	vector<string>last;
-	int start = get_index(string() + "aa" + lastTwo);
-	while (start < 456976) {
-		if (table[row][start] != "") 
-			last.push_back(table[row][start]);
-       start += 676;
-	}
-	return last;
-}
-
-//returns chains that start with firstTwo letters
-//takes a string containing first two letters
-//and an int representing the row to look for
-//and returns vector of strings containing words with first two letters
-vector<string>  WordBlender::find_first_two(string ft, int row) {
-	vector<string>first;
-	int start = get_index(string() + ft + "aa");
-	int end = start + 675;
-	while ( start<end) {
-		if (table[row][start] != "")
-			first.push_back(table[row][start]);
-		start++;
-	}
-
-	return first;
-}
-
-//check if two words overlap
-//lasttwo of w1 same as firsttwo of w2
-bool WordBlender::overlap(string w1, string w2) {
-	
-		string ltwo = string() + w1[w1.size()-2] + w1[w1.size() - 1];
-		string ftwo = string() + w2[0] + w2[1];
-		//cout << "comparing " << ltwo << " " << ftwo << endl;
-		if ( ltwo == ftwo) {
-			return true;
-		}
-		return false;
-}
 
 //takes two words and returns
 //the chain of those words
 string WordBlender::chain_words(string a, string b) {
 	a.pop_back(); a.pop_back();
-	return string()+a+b;
+	return string() + a + b;
 }
+ 
+//check if two words overlap
+//lasttwo of w1 same as firsttwo of w2
+bool WordBlender::overlap(string w1, string w2) {
 
-//checks and inserts chains in table
-void WordBlender::insert_table(string ftwo, string ltwo, int r, int c) {
-	vector<string>first = find_first_two(ftwo, r - 1);//chain
-	vector<string>last = find_last_two(ltwo, 0);//word
-	if (first.size() != 0 && last.size() != 0) {//if both words exist
-		for (int a = 0; a <= first.size() - 1; a++) {
-			for (int b = 0; b <= last.size() - 1; b++) {
-				if (overlap(first[a], last[b])) {
-					cout << "overlap: " << first[a] << " " << last[b] << endl;
-					table[r][c] = chain_words(first[a], last[b]);
-					cout << "inserted in " << r << ", " << c << ": " << table[r][c] << endl;
-				}
-
-			}
-
-		}
-
-	} 
-
-}//end insettable
+	string ltwo = string() + w1[w1.size() - 2] + w1[w1.size() - 1];
+	string ftwo = string() + w2[0] + w2[1];
+	//cout << "comparing " << ltwo << " " << ftwo << endl;
+	if (ltwo == ftwo) {
+		return true;
+	}
+	return false;
+}
+ 
+ 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-if (row == 2) {
-							//cout << "row " << row << endl;
-							vector<string>first = find_first_two(string() + al[i] + al[j], 1);//chain
-							vector<string>last = find_last_two(string() + al[k] + al[l], 0);//word
-							if (first.size()!=0 && last.size() != 0 ) {//if both words exist
-								for (int a = 0; a <= first.size()-1 ; a++) {
-									for (int b = 0; b <= last.size() - 1; b++) {
-										if (overlap(first[a], last[b])) {
-											//cout << "overlap: " << first[a] << " " << last[b] << endl;
-											table[row][column] = chain_words(first[a], last[b]);
-											//cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
-										}
-
-									}
-
-								}
-
-							}
-							if (table[row][column] == "") {//if nothing was inserted
-								vector<string>firstb = find_first_two(string() + al[i] + al[j], 0);//finds words
-								vector<string>lastb = find_last_two(string() + al[k] + al[l], 1);//finds chains
-								if (firstb.size() != 0 && lastb.size() != 0) {//if both words exist
-									for (int a = 0; a <= lastb.size() - 1; a++) {
-										for (int b = 0; b <= firstb.size() - 1; b++) {
-											if (overlap(firstb[b], lastb[a])) {
-												cout << "overlap: " << firstb[b] << " " << lastb[a] << endl;
-												table[row][column] = chain_words(firstb[b], lastb[a]);
-												cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
-											}
-										}
-									}
-
-								}
-								firstb.clear(); lastb.clear();
-							}
-							first.clear(); last.clear();
-
-						}//end row 2
-						if (row == 3) {
-							//cout << "row " << row << endl;
-							vector<string>first = find_first_two(string() + al[i] + al[j], 2);
-							vector<string>last = find_last_two(string() + al[k] + al[l], 0);
-							if (first.size() != 0 && last.size() != 0) {//if both words exist
-								for (int a = 0; a <= first.size() - 1; a++) {
-									for (int b = 0; b <= last.size() - 1; b++) {
-										if (overlap(first[a], last[b])) {
-											//cout << "overlap: " << first[a] << " " << last[b] << endl;
-											table[row][column] = chain_words(first[a], last[b]);
-											//cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
-										}
-
-									}
-
-								}
-
-							}
-							if (table[row][column] == "") {//if nothing was inserted
-								vector<string>firstb = find_first_two(string() + al[i] + al[j], 0);//finds words
-								vector<string>lastb = find_last_two(string() + al[k] + al[l], 2);//finds chains
-								if (firstb.size() != 0 && lastb.size() != 0) {//if both words exist
-									for (int a = 0; a <= lastb.size() - 1; a++) {
-										for (int b = 0; b <= firstb.size() - 1; b++) {
-											if (overlap(firstb[b], lastb[a])) {
-												cout << "overlap: " << firstb[b] << " " << lastb[a] << endl;
-												table[row][column] = chain_words(firstb[b], lastb[a]);
-												cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
-											}
-										}
-									}
-
-								}
-								firstb.clear(); lastb.clear();
-							}
-							first.clear(); last.clear();
-						}//end row 3
-						if (row == 4) {
-							//cout << "row " << row << endl;
-							vector<string>first = find_first_two(string() + al[i] + al[j], 3);
-							vector<string>last = find_last_two(string() + al[k] + al[l], 0);
-							if (first.size() != 0 && last.size() != 0) {//if both words exist
-								for (int a = 0; a <= first.size() - 1; a++) {
-									for (int b = 0; b <= last.size() - 1; b++) {
-										if (overlap(first[a], last[b])) {
-											//cout << "overlap: " << first[a] << " " << last[b] << endl;
-											table[row][column] = chain_words(first[a], last[b]);
-											//cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
-										}
-
-									}
-
-								}
-
-							}
-							if (table[row][column] == "") {//if nothing was inserted
-								vector<string>firstb = find_first_two(string() + al[i] + al[j], 0);//finds words
-								vector<string>lastb = find_last_two(string() + al[k] + al[l], 3);//finds chains
-								if (firstb.size() != 0 && lastb.size() != 0) {//if both words exist
-									for (int a = 0; a <= lastb.size() - 1; a++) {
-										for (int b = 0; b <= firstb.size() - 1; b++) {
-											if (overlap(firstb[b], lastb[a])) {
-												cout << "overlap: " << firstb[b] << " " << lastb[a] << endl;
-												table[row][column] = chain_words(firstb[b], lastb[a]);
-												cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
-											}
-										}
-									}
-
-								}
-								firstb.clear(); lastb.clear();
-							}
-							first.clear(); last.clear();
-						}//end row 4
-						if (row == 5) {
-							//cout << "row " << row << endl;
-							vector<string>first = find_first_two(string() + al[i] + al[j], 4);
-							vector<string>last = find_last_two(string() + al[k] + al[l], 0);
-							if (first.size() != 0 && last.size() != 0) {//if both words exist
-								for (int a = 0; a <= first.size() - 1; a++) {
-									for (int b = 0; b <= last.size() - 1; b++) {
-										if (overlap(first[a], last[b])) {
-											//cout << "overlap: " << first[a] << " " << last[b] << endl;
-											table[row][column] = chain_words(first[a], last[b]);
-											//cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
-										}
-
-									}
-
-								}
-
-							}
-							if (table[row][column] == "") {//if nothing was inserted
-								vector<string>firstb = find_first_two(string() + al[i] + al[j], 0);//finds words
-								vector<string>lastb = find_last_two(string() + al[k] + al[l], 4);//finds chains
-								if (firstb.size() != 0 && lastb.size() != 0) {//if both words exist
-									for (int a = 0; a <= lastb.size() - 1; a++) {
-										for (int b = 0; b <= firstb.size() - 1; b++) {
-											if (overlap(firstb[b], lastb[a])) {
-												cout << "overlap: " << firstb[b] << " " << lastb[a] << endl;
-												table[row][column] = chain_words(firstb[b], lastb[a]);
-												cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
-											}
-										}
-									}
-
-								}
-								firstb.clear(); lastb.clear();
-							}
-							first.clear(); last.clear();
-						}//end row 5
-						if (row == 6) {
-						//	cout << "row " << row << endl;
-							vector<string>first = find_first_two(string() + al[i] + al[j], 5);
-							vector<string>last = find_last_two(string() + al[k] + al[l], 0);
-							if (first.size() != 0 && last.size() != 0) {//if both words exist
-								for (int a = 0; a <= first.size() - 1; a++) {
-									for (int b = 0; b <= last.size() - 1; b++) {
-										if (overlap(first[a], last[b])) {
-											//cout << "overlap: " << first[a] << " " << last[b] << endl;
-											table[row][column] = chain_words(first[a], last[b]);
-											//cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
-										}
-
-									}
-
-								}
-
-							}
-							if (table[row][column] == "") {//if nothing was inserted
-								vector<string>firstb = find_first_two(string() + al[i] + al[j], 0);//finds words
-								vector<string>lastb = find_last_two(string() + al[k] + al[l], 5);//finds chains
-								if (firstb.size() != 0 && lastb.size() != 0) {//if both words exist
-									for (int a = 0; a <= lastb.size() - 1; a++) {
-										for (int b = 0; b <= firstb.size() - 1; b++) {
-											if (overlap(firstb[b], lastb[a])) {
-												cout << "overlap: " << firstb[b] << " " << lastb[a] << endl;
-												table[row][column] = chain_words(firstb[b], lastb[a]);
-												cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
-											}
-										}
-									}
-
-								}
-								firstb.clear(); lastb.clear();
-							}
-							first.clear(); last.clear();
-						}//end row 6
-						if (row == 7) {
-							//cout << "row " << row << endl;
-							vector<string>first = find_first_two(string() + al[i] + al[j], 6);
-							vector<string>last = find_last_two(string() + al[k] + al[l], 0);
-							if (first.size() != 0 && last.size() != 0) {//if both words exist
-								for (int a = 0; a <= first.size() - 1; a++) {
-									for (int b = 0; b <= last.size() - 1; b++) {
-										if (overlap(first[a], last[b])) {
-											//cout << "overlap: " << first[a] << " " << last[b] << endl;
-											table[row][column] = chain_words(first[a], last[b]);
-											//cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
-										}
-
-									}
-
-								}
-
-							}
-							if (table[row][column] == "") {//if nothing was inserted
-								vector<string>firstb = find_first_two(string() + al[i] + al[j], 0);//finds words
-								vector<string>lastb = find_last_two(string() + al[k] + al[l], 6);//finds chains
-								if (firstb.size() != 0 && lastb.size() != 0) {//if both words exist
-									for (int a = 0; a <= lastb.size() - 1; a++) {
-										for (int b = 0; b <= firstb.size() - 1; b++) {
-											if (overlap(firstb[b], lastb[a])) {
-												cout << "overlap: " << firstb[b] << " " << lastb[a] << endl;
-												table[row][column] = chain_words(firstb[b], lastb[a]);
-												cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
-											}
-										}
-									}
-
-								}
-								firstb.clear(); lastb.clear();
-							}
-							first.clear(); last.clear();
-						}//end row 7
-						if (row == 8) {
-							//cout << "row " << row << endl;
-							vector<string>first = find_first_two(string() + al[i] + al[j], 7);
-							vector<string>last = find_last_two(string() + al[k] + al[l], 0);
-							if (first.size() != 0 && last.size() != 0) {//if both words exist
-								for (int a = 0; a <= first.size() - 1; a++) {
-									for (int b = 0; b <= last.size() - 1; b++) {
-										if (overlap(first[a], last[b])) {
-											//cout << "overlap: " << first[a] << " " << last[b] << endl;
-											table[row][column] = chain_words(first[a], last[b]);
-											//cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
-										}
-
-									}
-
-								}
-
-							}
-							if (table[row][column] == "") {//if nothing was inserted
-								vector<string>firstb = find_first_two(string() + al[i] + al[j], 0);//finds words
-								vector<string>lastb = find_last_two(string() + al[k] + al[l], 7);//finds chains
-								if (firstb.size() != 0 && lastb.size() != 0) {//if both words exist
-									for (int a = 0; a <= lastb.size() - 1; a++) {
-										for (int b = 0; b <= firstb.size() - 1; b++) {
-											if (overlap(firstb[b], lastb[a])) {
-												cout << "overlap: " << firstb[b] << " " << lastb[a] << endl;
-												table[row][column] = chain_words(firstb[b], lastb[a]);
-												cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
-											}
-										}
-									}
-
-								}
-								firstb.clear(); lastb.clear();
-							}
-							first.clear(); last.clear();
-						}//end row 8
-						if (row == 9) {
-						//	cout << "row " << row << endl;
-							vector<string>first = find_first_two(string() + al[i] + al[j], 8);
-							vector<string>last = find_last_two(string() + al[k] + al[l], 0);
-							if (first.size() != 0 && last.size() != 0) {//if both words exist
-								for (int a = 0; a <= first.size() - 1; a++) {
-									for (int b = 0; b <= last.size() - 1; b++) {
-										if (overlap(first[a], last[b])) {
-											//cout << "overlap: " << first[a] << " " << last[b] << endl;
-											table[row][column] = chain_words(first[a], last[b]);
-											//cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
-										}
-
-									}
-
-								}
-
-							}
-							if (table[row][column] == "") {//if nothing was inserted
-								vector<string>firstb = find_first_two(string() + al[i] + al[j], 0);//finds words
-								vector<string>lastb = find_last_two(string() + al[k] + al[l], 8);//finds chains
-								if (firstb.size() != 0 && lastb.size() != 0) {//if both words exist
-									for (int a = 0; a <= lastb.size() - 1; a++) {
-										for (int b = 0; b <= firstb.size() - 1; b++) {
-											if (overlap(firstb[b], lastb[a])) {
-												cout << "overlap: " << firstb[b] << " " << lastb[a] << endl;
-												table[row][column] = chain_words(firstb[b], lastb[a]);
-												cout << "inserted in " << row << ", " << column << ": " << table[row][column] << endl;
-											}
-										}
-									}
-
-								}
-								firstb.clear(); lastb.clear();
-							}
-							first.clear(); last.clear();
-						}//end row 9
-
-*/
+ 

@@ -1,2 +1,3 @@
 ﻿  wordblender.cpp
+c:\users\alexis\documents\hwblnd\hwblnd\wordblender.cpp(440): warning C4018: '<=': signed/unsigned mismatch
   hwBLND.vcxproj -> C:\Users\Alexis\Documents\hwBLND\Debug\hwBLND.exe

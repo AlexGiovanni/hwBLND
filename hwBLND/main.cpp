@@ -72,7 +72,7 @@ int main()
 		
         // Setup testing for W1
         populate_dictionary(D, "eleven-words.txt");
-		cout << "Test 1" << endl;
+		 
 	WordBlender W1("eleven-words.txt", 15);
 	test(is_blend(W1.blend("apple", "lefty", 2), "apple", "lefty", D) == 2);
 	test(is_blend(W1.blend("apple", "tyrol", 3), "apple", "tyrol", D) == 3);
@@ -95,10 +95,10 @@ int main()
 	test(W1.blend("kidnap", "olfactory", 4) == "");
 	test(W1.blend("kidnap", "olfactory", 6) == "");
 
-        
+       
         // Setup testing for W2
         populate_dictionary(D, "five-letter-words.txt");
-		cout << "Test 2" << endl;
+		 
 	WordBlender W2("five-letter-words.txt", 4);
         test(is_blend(W2.blend("salsa", "sauce", 2), "salsa", "sauce", D) == 2);
         test(is_blend(W2.blend("soggy", "gyros", 2), "soggy", "gyros", D) == 2);
@@ -123,7 +123,7 @@ int main()
 		
         // Setup testing for W3
         populate_dictionary(D, "six-letter-words.txt");
-		cout << "Test 3" << endl;
+		 
 	WordBlender W3("six-letter-words.txt", 6);
         test(is_blend(W3.blend("locate", "animal", 4), "locate", "animal", D) == 4);
         test(is_blend(W3.blend("smooth", "stolen", 4), "smooth", "stolen", D) == 4);
